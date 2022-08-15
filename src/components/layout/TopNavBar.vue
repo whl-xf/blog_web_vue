@@ -27,67 +27,36 @@
             <i class="iconfont iconsousuo" /> 搜索
           </a>
         </div>
-        <div class="menus-item">
-          <router-link class="menu-btn" to="/">
-            <i class="iconfont iconzhuye" /> 首页
+
+        <div v-for="item in blogInfo.navsList" :key="item.id" class="menus-item" >
+          <router-link v-if="item.isHidden == 0 && item.children.length <= 0 && !item.url.includes('http')" class="menu-btn" :to="item.url">
+            <i :class="iconfont + item.icon" /> {{item.name}}
           </router-link>
-        </div>
-        <div class="menus-item">
-          <a class="menu-btn">
-            <i class="iconfont iconfaxian" /> 发现
+
+          <a v-else-if="item.isHidden == 0 && !item.url.includes('http')" class="menu-btn">
+            <i :class="iconfont + item.icon" /> {{item.name}}
             <i class="iconfont iconxiangxia2 expand" />
           </a>
-          <ul class="menus-submenu">
-            <li>
-              <router-link to="/archives">
-                <i class="iconfont iconguidang" /> 归档
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/categories">
-                <i class="iconfont iconfenlei" /> 分类
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/tags">
-                <i class="iconfont iconbiaoqian" /> 标签
-              </router-link>
-            </li>
-          </ul>
-        </div>
-        <div class="menus-item">
-          <a class="menu-btn">
-            <i class="iconfont iconqita" /> 娱乐
-            <i class="iconfont iconxiangxia2 expand" />
+
+          <a v-else-if="item.isHidden == 0" class="menu-btn" :href="item.url" target="_blank" >
+            <i :class="iconfont + item.icon" /> {{item.name}}
           </a>
-          <ul class="menus-submenu">
-            <li>
-              <router-link to="/albums">
-                <i class="iconfont iconxiangce1" /> 相册
+
+          <ul v-if="item.isHidden == 0 && item.children.length > 0" class="menus-submenu">
+            <li v-for="z_nav in item.children " :key="z_nav.id">
+              <router-link v-if="z_nav.isHidden == 0 && !z_nav.url.includes('http')" :to="z_nav.url">
+                <i :class="iconfont + z_nav.icon" /> {{z_nav.name}}
               </router-link>
-            </li>
-            <li>
-              <router-link to="/talks">
-                <i class="iconfont iconpinglun" /> 说说
-              </router-link>
+
+              <a v-else-if="z_nav.isHidden == 0" :href="z_nav.url" target="_blank" >
+                <i :class="iconfont + z_nav.icon" /> {{z_nav.name}}
+              </a>
+
             </li>
           </ul>
+
         </div>
-        <div class="menus-item">
-          <router-link class="menu-btn" to="/links">
-            <i class="iconfont iconlianjie" /> 友链
-          </router-link>
-        </div>
-        <div class="menus-item">
-          <router-link class="menu-btn" to="/about">
-            <i class="iconfont iconzhifeiji" /> 关于
-          </router-link>
-        </div>
-        <div class="menus-item">
-          <router-link class="menu-btn" to="/message">
-            <i class="iconfont iconpinglunzu" /> 留言
-          </router-link>
-        </div>
+
         <div class="menus-item">
           <a
             class="menu-btn"
@@ -127,7 +96,19 @@ export default {
   },
   data: function() {
     return {
-      navClass: ""
+      navClass: "",
+      iconfont: "iconfont ",
+      navForm: {
+        id: "",
+        name: "",
+        icon: "",
+        url: "",
+        orderNum: 1,
+        parentId: "",
+        isHidden: 0,
+        children: []
+      },
+      navsList: []
     };
   },
   methods: {
