@@ -43,51 +43,27 @@
     <hr />
     <!-- 页面导航 -->
     <div class="menu-container">
-      <div class="menus-item">
-        <router-link to="/">
-          <i class="iconfont iconzhuye" /> 首页
+
+      <div v-for="nav in blogInfo.navsList" :key="nav.id" class="menus-item">
+        <router-link v-if="nav.isHidden == 0 && nav.children.length <= 0 && !nav.url.includes('http')" :to="nav.url">
+          <i :class="iconfont + nav.icon" /> {{nav.name}}
         </router-link>
+
+        <ul v-if="nav.isHidden == 0 && nav.children.length > 0" class="menus-submenu">
+            <li v-for="z_nav in nav.children " :key="z_nav.id">
+              <router-link v-if="z_nav.isHidden == 0 && !z_nav.url.includes('http')" :to="z_nav.url">
+                <i :class="iconfont + z_nav.icon" /> {{z_nav.name}}
+              </router-link>
+
+              <a v-else-if="z_nav.isHidden == 0" :href="z_nav.url" target="_blank" >
+                <i :class="iconfont + z_nav.icon" /> {{z_nav.name}}
+              </a>
+
+            </li>
+          </ul>
       </div>
-      <div class="menus-item">
-        <router-link to="/archives">
-          <i class="iconfont iconguidang" /> 归档
-        </router-link>
-      </div>
-      <div class="menus-item">
-        <router-link to="/albums">
-          <i class="iconfont iconxiangce1" /> 相册
-        </router-link>
-      </div>
-      <div class="menus-item">
-        <router-link to="/talks">
-          <i class="iconfont iconpinglun" /> 说说
-        </router-link>
-      </div>
-      <div class="menus-item">
-        <router-link to="/categories">
-          <i class="iconfont iconfenlei" /> 分类
-        </router-link>
-      </div>
-      <div class="menus-item">
-        <router-link to="/tags">
-          <i class="iconfont iconbiaoqian" /> 标签
-        </router-link>
-      </div>
-      <div class="menus-item">
-        <router-link to="/links">
-          <i class="iconfont iconlianjie" /> 友链
-        </router-link>
-      </div>
-      <div class="menus-item">
-        <router-link to="/about">
-          <i class="iconfont iconzhifeiji" /> 关于
-        </router-link>
-      </div>
-      <div class="menus-item">
-        <router-link to="/message">
-          <i class="iconfont iconpinglunzu" /> 留言
-        </router-link>
-      </div>
+
+      
       <div class="menus-item" v-if="!this.$store.state.avatar">
         <a @click="openLogin"><i class="iconfont icondenglu" /> 登录 </a>
       </div>
@@ -159,7 +135,16 @@ export default {
     },
     isLogin() {
       return this.$store.state.userId;
+    },
+    blogInfo() {
+      return this.$store.state.blogInfo;
     }
+  },
+  data: function() {
+    return {
+      iconfont: "iconfont ",
+      navsList: []
+    };
   },
   methods: {
     openLogin() {
