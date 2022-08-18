@@ -49,6 +49,10 @@
           <i :class="iconfont + nav.icon" /> {{nav.name}}
         </router-link>
 
+        <a v-else-if="nav.isHidden == 0 && nav.url.includes('http')" class="menu-btn" :href="nav.url" target="_blank" >
+            <i :class="iconfont + nav.icon" /> {{nav.name}}
+          </a>
+
         <ul v-if="nav.isHidden == 0 && nav.children.length > 0" class="menus-submenu">
             <li v-for="z_nav in nav.children " :key="z_nav.id">
               <router-link v-if="z_nav.isHidden == 0 && !z_nav.url.includes('http')" :to="z_nav.url">
